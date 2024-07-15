@@ -33,16 +33,20 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        req.body.fileName = req.file.filename;
+        if (req.file) {
+            req.body.fileName = req.file.filename;
+        }
         const existingUser = await userModel.findOne({ where: { email: req.body.email } })
         if (existingUser) {
-            const filePath = path.resolve(`files/images/${req.file.filename}`)
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.log(err);
-                }
-                // console.log("file deleted");
-            });
+            if (req.file) {
+                const filePath = path.resolve(`files/images/${req.file.filename}`)
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    // console.log("file deleted");
+                });
+            }
             res.status(200).send({ msg: "User already exist." })
 
         }

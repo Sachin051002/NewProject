@@ -19,7 +19,6 @@ module.exports = (Sequelize, sequelize) => {
     },
     fileName: {
       type: Sequelize.STRING,
-      allowNull: false,
     }
   });
 
