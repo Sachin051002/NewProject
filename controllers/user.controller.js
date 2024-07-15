@@ -11,22 +11,3 @@ exports.userProfile = async (req, res) => {
         res.status(500).send(e);
     }
 }
-
-exports.userImage = async (req,res)=>{
-    try{
-        const fileName = req.params;
-        console.log(fileName);
-        res.send()
-        // if (existingUser.fileName) {
-        //     const filePath = path.resolve("files/images/"+existingUser.fileName);
-        //     res.sendFile(filePath, (err) => {
-        //         if (err) {
-        //             console.error('Error sending file:', err);
-        //         }
-        //     });
-        // }
-    }
-    catch(e){
-        res.status(500).send(e)
-    }
-}

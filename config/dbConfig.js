@@ -12,7 +12,7 @@ const sequelize = new Sequelize("spotNew", process.env.user, process.env.passwor
     pool: {
       max: 5,
       min: 0,
-      acquire: 3000,
+      acquire: 30000,
       idle: 10000,
     },
   })

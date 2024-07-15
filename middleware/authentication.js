@@ -19,7 +19,7 @@ exports.isAuthenticated = async (req, res, next) => {
         }
       }
       req.user = user;
-      console.log('adsfj;')
+      // console.log('adsfj;')
       next();
     })
 
