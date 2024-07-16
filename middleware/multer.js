@@ -3,6 +3,9 @@ const path = require("path");
 
 const userStorage = multer.diskStorage({
   destination: (req, file, cb) => {
+// console.log(req);
+console.log(file);
+
     let destination = path.resolve("files/images");
     cb(null, destination);
   },

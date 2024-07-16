@@ -15,7 +15,33 @@ exports.userProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
+        console.log(req.user);
+
+        console.log('update wala');
+        if (req.body.file) {
+            const base64Data = req.body.file.replace(/^data:image\/png;base64,/, "");
+            const imageFileName = `userProfile${req.user.id}.png`;
+            const imageDir = path.join('files', 'images');
+            const imagePath = path.join(imageDir, imageFileName);
+
+            try {
+                // Create directory if it doesn't exist
+                if (!fs.existsSync(imageDir)) {
+                    fs.mkdirSync(imageDir, { recursive: true });
+                }
+
+                // Write base64 image data to file
+                await fs.promises.writeFile(imagePath, base64Data, 'base64');
+
+                req.body.fileName = `files/images/${imageFileName}`;
+
+            } catch (err) {
+                console.error('Error saving image:', err);
+                return res.status(500).send({ error: 'Failed to save image' });
+            }
+        }
         if (req.file) {
+            console.log('file found');
             req.body.fileName = req.file.filename;
             await userModel.findOne({ where: { id: req.user.id } })
                 .then(data => {

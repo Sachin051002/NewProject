@@ -4,11 +4,12 @@ const { jwt_secretToken } = require('../config/env');
 exports.isAuthenticated = async (req, res, next) => {
   // console.log(req.headers);
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    if(req.headers.authorization){
+    var token = req.headers.authorization.split(' ')[1];
+    }
 
     if (!token) {
       return res.status(401).send({ mssg: "Token not provided" })
-
     }
 
     jwt.verify(token, jwt_secretToken, async (err, user) => {

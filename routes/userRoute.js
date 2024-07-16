@@ -8,7 +8,7 @@ const { userUpload } = require('../middleware/multer');
 
 
 router.get('/profile',userProfile);
-router.post('/updateProfile', userUpload, updateProfile);
+router.post('/updateProfile',userUpload, updateProfile);
 
 
 

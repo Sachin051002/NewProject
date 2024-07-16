@@ -14,7 +14,8 @@ exports.login = async (req, res) => {
                 const token = await createToken(existingUser);
                 const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-                res.setHeader("AuthorizationToken", token);
+                res.setHeader("Authorization", token);
+                res.setHeader("jwt_token", token);
                 res.status(200).send({ msg: "Login Successfully.", token })
             }
             else {
@@ -32,6 +33,7 @@ exports.login = async (req, res) => {
 
 
 exports.register = async (req, res) => {
+    console.log("this is a register",req.body);
     try {
         if (req.file) {
             req.body.fileName = req.file.filename;

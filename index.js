@@ -23,6 +23,7 @@ app.use(function (req, res, next) {
     }
   });
 
+  app.use('/files', express.static('files'))
 
 
 app.use('/',basicRoute);
