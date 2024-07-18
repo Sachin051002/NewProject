@@ -20,5 +20,6 @@ const sequelize = new Sequelize("spotNew", process.env.user, process.env.passwor
 const db= {};
 
 db.user = require('../model/userModel')(Sequelize,sequelize);
+db.otp = require('../model/otp')(Sequelize,sequelize);
 
 module.exports = db;

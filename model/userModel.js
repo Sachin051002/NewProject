@@ -11,7 +11,7 @@ module.exports = (Sequelize, sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true
+      primaryKey: true
     },
     password: {
       type: Sequelize.STRING,
@@ -19,10 +19,13 @@ module.exports = (Sequelize, sequelize) => {
     },
     fileName: {
       type: Sequelize.STRING,
+    },
+    address:{
+      type:Sequelize.STRING,
     }
   });
 
-  user.sync({ alter: true });
+  user.sync({alter:true});
   return user;
 }
 
