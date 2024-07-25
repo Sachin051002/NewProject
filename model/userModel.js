@@ -1,5 +1,10 @@
 module.exports = (Sequelize, sequelize) => {
   const user = sequelize.define("user", {
+    id:{
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     firstName: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -11,7 +16,7 @@ module.exports = (Sequelize, sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique:true
     },
     password: {
       type: Sequelize.STRING,
@@ -22,7 +27,14 @@ module.exports = (Sequelize, sequelize) => {
     },
     address:{
       type:Sequelize.STRING,
-    }
+    },
+    phoneNumber:{
+      type:Sequelize.STRING,
+    },
+    // isActive:{
+    //   type: Sequelize.BOOLEAN,
+    //   defaultValue : false
+    // }
   });
 
   user.sync({alter:true});

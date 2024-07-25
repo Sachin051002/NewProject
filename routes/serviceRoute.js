@@ -3,12 +3,13 @@ const { services } = require('../controllers/service.controller');
 
 const router = express.Router();
 
+ 
 
 
 
-
-router.get('/services',services);
-
+router.get('/availableServices',services);
 
 
-module.exports = router;
+
+module.exports = router;                             
+

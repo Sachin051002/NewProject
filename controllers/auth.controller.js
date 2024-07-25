@@ -22,21 +22,22 @@ const transporter = nodemailer.createTransport(
 );
 exports.login = async (req, res) => {
     try {
-        const existingUser = await userModel.findOne({ where: { email: req.body.email } })
+        const existingUser = await userModel.findOne({ where: { email: req.body.email} })
+        console.log(existingUser)
         if (existingUser) {
             if (await compareHash(req.body.password, existingUser.password)) {
                 const token = await createToken(existingUser);
                 const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000);
                 res.setHeader("Authorization", token);
                 res.setHeader("jwt_token", token);
-                res.status(200).send({ msg: "Login Successfully.", token })
+                res.status(200).send({ msg: "Login Successfully.", token, email:existingUser.email })
             }
             else {
-                res.status(200).send({ msg: "Password is incorrect." })
+                res.status(400).send({ msg: "Password is incorrect." })
             }
         }
         else {
-            res.status(200).send({ msg: "Email id does not exist." })
+            res.status(404).send({ msg: "Email id does not exist." })
         }
     } catch (e) {
         res.status(500).send(e);
@@ -48,8 +49,8 @@ exports.register = async (req, res) => {
         if (req.file) {
             req.body.fileName = req.file.filename;
         }
-        var { firstName, lastName, email, password, address, fileName } = req.body;
-        const existingUser = await userModel.findOne({ where: { email } });
+        var { firstName, lastName, email, password,phoneNumber,address, fileName } = req.body;
+        const existingUser = await userModel.findOne({ where: { email} });
         if (existingUser) {
             if (req.file) {
                 const filePath = path.resolve(`files/images/${req.file.filename}`);
@@ -61,7 +62,7 @@ exports.register = async (req, res) => {
                     }
                 });
             }
-            return res.status(200).send({ msg: "User already exists." });
+            return res.status(409).send({ msg: "User already exists." });
         }
         console.log("New user registration attempt.");
         const otp = crypto.randomInt(1000, 9999).toString();
@@ -71,6 +72,7 @@ exports.register = async (req, res) => {
             lastName,
             email,
             password,
+            phoneNumber,
             address,
             fileName,
         });
@@ -116,6 +118,7 @@ exports.verify = async (req, res) => {
                 otp
             }
         });
+        // await userModel.update({isActive:true},{where:{email}})
         res.status(200).send({ msg: "OTP verified successfully." });
     } catch (error) {
         console.error("Error verifying OTP:", error);

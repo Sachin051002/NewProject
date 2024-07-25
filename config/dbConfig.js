@@ -21,5 +21,6 @@ const db= {};
 
 db.user = require('../model/userModel')(Sequelize,sequelize);
 db.otp = require('../model/otp')(Sequelize,sequelize);
+db.captcha = require('../model/captcha.model')(Sequelize,sequelize);
 
 module.exports = db;

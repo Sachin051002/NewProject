@@ -28,10 +28,11 @@ app.use(function (req, res, next) {
 
 
 app.use('/',basicRoute);
+app.use('/Srv',services)
+
 
 app.use(isAuthenticated)
 app.use('/user',userRoute);
-app.use('/Srv',services)
 
 
 app.listen(5444,()=>{
