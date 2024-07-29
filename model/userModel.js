@@ -31,10 +31,10 @@ module.exports = (Sequelize, sequelize) => {
     phoneNumber:{
       type:Sequelize.STRING,
     },
-    // isActive:{
-    //   type: Sequelize.BOOLEAN,
-    //   defaultValue : false
-    // }
+    isActive:{
+      type: Sequelize.BOOLEAN,
+      defaultValue : false
+    }
   });
 
   user.sync({alter:true});

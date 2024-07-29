@@ -16,6 +16,18 @@ const sequelize = new Sequelize("spotNew", process.env.user, process.env.passwor
       idle: 10000,
     },
   })
+// const sequelize = new Sequelize("spotNew", "chand", 'Hrportal@12345', {
+//     host: "159.223.177.89",
+//     dialect: "mysql",
+//     logging: false,
+//     operatorsAliases: 0,
+//     pool: {
+//       max: 5,
+//       min: 0,
+//       acquire: 30000,
+//       idle: 10000,
+//     },
+//   })
 
 const db= {};
 

@@ -6,7 +6,7 @@ const { createHash, compareHash, createToken } = require("../utility/password");
 const fs = require('fs');
 const path = require('path');
 const userModel = db.user;
-const Otp=db.otp;
+const Otp = db.otp;
 const transporter = nodemailer.createTransport(
     smtpTransport({
         host: "smtp-relay.sendinblue.com",
@@ -24,13 +24,16 @@ exports.login = async (req, res) => {
     try {
         const existingUser = await userModel.findOne({ where: { email: req.body.email} })
         console.log(existingUser)
+        // if(!existingUser.isActive){
+        //     return res.status(403).send({msg:"Email not verified."})
+        // }
         if (existingUser) {
             if (await compareHash(req.body.password, existingUser.password)) {
                 const token = await createToken(existingUser);
                 const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000);
                 res.setHeader("Authorization", token);
                 res.setHeader("jwt_token", token);
-                res.status(200).send({ msg: "Login Successfully.", token, email:existingUser.email })
+                res.status(200).send({ msg: "Login Successfully.", token, email: existingUser.email })
             }
             else {
                 res.status(400).send({ msg: "Password is incorrect." })
@@ -44,13 +47,13 @@ exports.login = async (req, res) => {
     }
 }
 exports.register = async (req, res) => {
-    console.log("This is a register request:", req.body);
+    // console.log("This is a register request:", req.body);
     try {
         if (req.file) {
             req.body.fileName = req.file.filename;
         }
-        var { firstName, lastName, email, password,phoneNumber,address, fileName } = req.body;
-        const existingUser = await userModel.findOne({ where: { email} });
+        var { firstName, lastName, email, password, phoneNumber, address, fileName } = req.body;
+        const existingUser = await userModel.findOne({ where: { email } });
         if (existingUser) {
             if (req.file) {
                 const filePath = path.resolve(`files/images/${req.file.filename}`);
@@ -66,7 +69,7 @@ exports.register = async (req, res) => {
         }
         console.log("New user registration attempt.");
         const otp = crypto.randomInt(1000, 9999).toString();
-       password = await createHash(req.body.password);
+        password = await createHash(req.body.password);
         const newUser = await userModel.create({
             firstName,
             lastName,
@@ -107,7 +110,8 @@ exports.verify = async (req, res) => {
     try {
         const otpRecord = await Otp.findOne({
             where: {
-                otp
+                otp,
+                // email
             }
         });
         if (!otpRecord) {
@@ -118,7 +122,8 @@ exports.verify = async (req, res) => {
                 otp
             }
         });
-        // await userModel.update({isActive:true},{where:{email}})
+        const email = otpRecord.email;
+        await userModel.update({isActive:true},{where:{email}})
         res.status(200).send({ msg: "OTP verified successfully." });
     } catch (error) {
         console.error("Error verifying OTP:", error);
@@ -139,5 +144,23 @@ exports.userImage = async (req, res) => {
     }
     catch (e) {
         res.status(500).send(e)
+    }
+}
+
+exports.getOtp = async (req, res) => {
+    try {
+        const email = req.body.email;
+        const otpRecord = await Otp.findOne({
+            where: {
+                email
+            }
+        });
+        if (!otpRecord) {
+            return res.status(400).send({ error: "OTP not found." });
+        }
+
+        res.status(200).send({ OTP: otpRecord.otp });
+    } catch (e) {
+        return res.status(500).send({ error: "Something went wrong." })
     }
 }
